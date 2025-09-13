@@ -14,22 +14,26 @@ bool isPrime(int n)
 int main()
 {
     int n; cin >> n;
-    int k = 1;
+    int k = 2;
     int cnt = 0;
+    int super_cnt = 0;
 
-    for(int i = 1; i <= n; i++)
+    
+    while(super_cnt < n)
     {
-        while(true)
+        if(isPrime(k))
         {
-            if(isPrime(k))
+            cnt++;
+            if(isPrime(cnt)) 
             {
-                if(k == n) 
+                super_cnt++;
+                if(super_cnt == n)
                 {
                     cout << k << endl;
                     break;
                 }
             }
-            k++;
         }
+        k++;
     }
 }
