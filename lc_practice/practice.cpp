@@ -171,7 +171,7 @@ int main(){
         } else if (command == 5){
             head = reverse(head);
         } else if (command == 6){
-            int x;
+            int x;  
             cin >> x;
             head = cyclic_left(head, x);
         } else if (command == 7){
