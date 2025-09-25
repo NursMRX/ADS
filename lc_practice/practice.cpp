@@ -1,191 +1,141 @@
 #include<bits/stdc++.h>
 using namespace std;
-struct Node{
-    int val;
-    Node* next;
-    Node(): val(0), next(nullptr) {}
-    Node(int x): val(x), next(nullptr) {}
-    Node(Node* next): val(0), next(next) {}
-    Node(int x, Node* next): val(x), next(next) {}
-};
 
-Node* insert(Node* head, Node* node, int p){
-    if (p == 0){
-        node->next = head;
-        return node;
-    }
-    Node* curr = head;
-    for (int i = 0; i < p - 1; i++){
-        curr = curr->next;
-    }
-    node->next = curr->next;
-    curr->next = node;
-    return head;
-}
+class stack(){
+    public:
+    Node *top;
+    int size;
 
-Node* remove(Node* head, int p){
-    if (p == 0){
-        Node* temp = head;
-        head = head->next;
-        delete temp;
-        return head;
-    }
-    Node* curr = head;
-    for (int i = 0; i < p - 1; i++){
-        curr = curr->next;
-    }
-    Node* temp = curr->next;
-    curr->next = temp->next;
-    delete temp;
-    return head;
-}
-
-void print(Node* head){
-    if (!head){
-        cout << -1 << endl;
-        return;
-    }
-    Node* curr = head;
-    while (curr){
-        cout << curr->val;
-        if (curr->next) cout << " ";
-        curr = curr->next;
-    }
-    cout << endl;
-}
-
-Node* replace(Node* head, int p1, int p2){
-    if (p1 == p2) return head;
-
-    // Извлекаем узел с позиции p1
-    Node* prev1 = nullptr;
-    Node* curr1 = head;
-    if (p1 > 0) {
-        prev1 = head;
-        for (int i = 0; i < p1 - 1; ++i) prev1 = prev1->next;
-        curr1 = prev1->next;
+    stack(){
+        top = NULL;
+        size = 0;
     }
 
-    if (prev1) prev1->next = curr1->next;
-    else head = curr1->next;
-
-    // Вставляем узел на позицию p2
-    Node* prev2 = nullptr;
-    Node* curr2 = head;
-    for (int i = 0; i < p2 - 1 && curr2; ++i) {
-        prev2 = curr2;
-        curr2 = curr2->next;
+    void push(int data){
+        Node *node = new Node(data)
+        node -> next = top;
+        top = node;
+        size++;
     }
-    
-    if (prev2) {
-        curr1->next = prev2->next;
-        prev2->next = curr1;
-    } else {
-        curr1->next = head;
-        head = curr1;
-    }
-    return head;
-}
 
-Node* reverse(Node* head){
-    Node* prev = nullptr;
-    Node* curr = head;
-    while (curr){
-        Node* nextNode = curr->next;
-        curr->next = prev;
-        prev = curr;
-        curr = nextNode;
-    }
-    return prev;
-}
-
-Node* cyclic_left(Node* head, int x){
-    if (!head || !head->next) return head;
-
-    int len = 0;
-    Node* tail = head;
-    while (tail->next){
-        tail = tail->next;
-        len++;
-    }
-    len++;
-
-    x %= len;
-    if (x == 0) return head;
-
-    tail->next = head;
-    Node* newTail = head;
-    for (int i = 0; i < x - 1; i++){
-        newTail = newTail->next;
-    }
-    Node* newHead = newTail->next;
-    newTail->next = nullptr;
-    return newHead;
-}
-
-Node* cyclic_right(Node* head, int x){
-    if (!head || !head->next) return head;
-
-    int len = 0;
-    Node* tail = head;
-    while (tail->next){
-        tail = tail->next;
-        len++;
-    }
-    len++;
-
-    x %= len;
-    if (x == 0) return head;
-
-    int leftShift = len - x;
-
-    tail->next = head;
-    Node* newTail = head;
-    for (int i = 0; i < leftShift - 1; i++){
-        newTail = newTail->next;
-    }
-    Node* newHead = newTail->next;
-    newTail->next = nullptr;
-    return newHead;
-}
-
-
-int main(){
-    Node* head = nullptr;
-    int command;
-    while (cin >> command && command != 0){
-        if (command == 1){
-            int x, p;
-            cin >> x >> p;
-            head = insert(head, new Node(x), p);
-        } else if (command == 2){
-            int p;
-            cin >> p;
-            head = remove(head, p);
-        } else if (command == 3){
-            print(head);
-        } else if (command == 4){
-            int p1, p2;
-            cin >> p1 >> p2;
-            head = replace(head, p1, p2);
-        } else if (command == 5){
-            head = reverse(head);
-        } else if (command == 6){
-            int x;  
-            cin >> x;
-            head = cyclic_left(head, x);
-        } else if (command == 7){
-            int x;
-            cin >> x;
-            head = cyclic_right(head, x);
+    void pop(){
+        if(top != NULL){
+            top = top -> next;
+            size--;
+            delete top;
         }
     }
-    
-    // Очистка памяти перед выходом
-    while (head){
-        Node* temp = head;
-        head = head->next;
-        delete temp;
+
+    bool empty(){
+        return (size == 0);
     }
+
+    int size(){
+        return this->size;
+    }
+}
+
+class queue(){
+    public: 
+    Node *front;
+    Node *end;
+    int size;
+
+    
+    queue()
+    {
+        front = NULL;
+        end = NULL;
+        size = 0;
+    }
+
+    void push(int data){
+        Node *newNode = new Node(data)
+        if(front == NULL){
+            end = front = newNode;
+            return;
+        }
+        end -> next = newNode;
+        end = newNode;
+        size++;
+    }
+
+    void pop(){
+        if(front == NULL) return;
+        Node *tmp = front;
+        front = front -> next;
+        if(front == NULL) end = NULL;
+        delete tmp;
+        size--;
+    }
+}
+
+class LinkedList(){
+    public:
+    Node *head;
+    Node *tail;
+    size;
+
+    LinkedList(){
+        head = NULL;
+        tail = NULL;
+        size = 0;
+    }
+
+    void front_head(int data){
+        Node *newNode = new Node(data)
+        if(head == NULL){
+            head = tail = newNode;
+        }
+        else{
+            newNode -> prev = head;
+            head -> next = newNode;
+            head = newNode;
+        }
+        size++;
+    }
+
+    void push_tail(int data){
+        Node *newNode = new Node(data);
+        if(tail == NULL){
+            tail = head = newNode;
+        }
+        else{
+            newNode -> prev = tail;
+            tail -> next = newNode;
+            tail = newNode;
+            
+        }
+        size++;
+    }
+
+    void pop_back(){
+        if(tail != NULL){
+            tail = tail -> prev;
+            if(tail != NULL) tail -> next = NULL;
+            else head = NULL;
+        }
+        size--;
+    }
+
+    void pop_front(){
+        if(head != NULL){
+            head = head -> next;
+            if(head != NULL) head -> prev == NULL;
+            else tail = NULL;
+        }
+    }
+
+    void del_node(){
+        else{
+            Node *a =
+        }
+    }
+}
+
+
+
+int main() {
+    
     return 0;
 }
