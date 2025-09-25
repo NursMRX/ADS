@@ -1,40 +1,30 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+const int N = 1e5 + 5;
+
 int main() {
-    int n, k;
-    cin >> n >> k;              
-
-    vector<int> a(n + 1);       
-    a[0] = 0;                   
-
-    cin >> a[1];                
-    for (int i = 2; i <= n; i++) {
-        cin >> a[i];            
-        a[i] += a[i - 1];       // Добавляем предыдущую сумму для префиксной суммы
-    }
-
-    int ans = n + 1;            // Инициализируем ответ как максимальный размер окна
-    for (int i = 0; i < n; i++) {
-        int l = i;              // Левая граница окна
-        int r = n;              // Правая граница окна
-        int m;
-
-        while (l < r) {
-            m = l + (r - l) / 2;  // Средний элемент для бинарного поиска
-            if (a[m] - a[i] < k) {
-                l = m + 1;         // Если сумма меньше k, сдвигаем левую границу
-            } else {
-                r = m;             // Если сумма >= k, сдвигаем правую границу
-            }
+    
+    long long n, k, mn = INT_MAX;
+    long long a[N], pref[N];
+    
+    cin >> n >> k;
+    pref[0] = 0;
+    
+    for(int i = 1; i <= n; i++) cin >> a[i], pref[i] = pref[i-1] + a[i];
+    
+    int l = 1, r = n;
+    
+    while(l + 1 < r){
+        long long mid = (l + r) / 2;
+        bool ok = 0;
+        for(int i = 1; i <= n - mid + 1; i++){
+            if(pref[i + mid - 1] - pref[i] >= k) ok = 1;
         }
-
-        // Проверяем, найдено ли подходящее окно
-        if (a[l] - a[i] >= k) {
-            ans = min(ans, l - i);  // Обновляем минимальную длину окна
-        }
+        if(ok) r = mid;
+        else l = mid;
     }
-
-    cout << ans << endl;        // Выводим минимальную длину окна
+    cout << l;
+    
     return 0;
 }
