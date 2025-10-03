@@ -35,7 +35,8 @@ int search_subtree(Node* cur, int val){
 }
 
 
-int main() {
+int main() 
+{
     
     int n, x;
     Node* root = NULL;
