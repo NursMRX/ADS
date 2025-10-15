@@ -128,14 +128,13 @@ class LinkedList(){
 
     void del_node(){
         else{
-            Node *a =
+            Node *a = node->prev;
+            Node *b = node->next;
+            a->next = b;
+            b->prev = a;
         }
     }
 }
 
 
 
-int main() {
-    
-    return 0;
-}
